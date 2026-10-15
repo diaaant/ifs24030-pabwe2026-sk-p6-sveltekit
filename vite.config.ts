@@ -1,5 +1,5 @@
 import { sveltekit } from "@sveltejs/kit/vite";
-import adapter from "@sveltejs/adapter-bun";
+import adapter from "@sveltejs/adapter-vercel";
 import tailwindcss from "@tailwindcss/vite";
 import { svelteTesting } from "@testing-library/svelte/vite";
 import { defineConfig, loadEnv } from "vite";
@@ -13,10 +13,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       sveltekit({
         adapter: adapter({
-          envPrefix: "APP_",
-          serverOptions: {
-            port: port,
-          },
+          runtime: "nodejs22.x",
         }),
       }),
       tailwindcss(),
@@ -33,7 +30,7 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       DELCOM_BASEURL: JSON.stringify(
-        env.VITE_DELCOM_BASEURL || "http://localhost:8000/api/v1"
+        env.VITE_DELCOM_BASEURL || "http://localhost:8000/api/v1",
       ),
     },
     test: {
