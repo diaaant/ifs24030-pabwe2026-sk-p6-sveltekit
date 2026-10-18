@@ -22,7 +22,7 @@
 </script>
 
 <form onsubmit={submit} class="space-y-4" data-testid="register-form">
-  <h2 class="text-lg font-bold">Daftar</h2>
+  <h1 class="text-lg font-bold">Daftar</h1>
   <div>
     <label for="register-name-input" class="block text-sm font-medium mb-1">Nama</label>
     <input id="register-name-input" type="text" required value={$nameValue} oninput={name.onChange}

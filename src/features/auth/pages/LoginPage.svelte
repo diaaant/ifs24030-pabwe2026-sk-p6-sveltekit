@@ -21,7 +21,7 @@
 </script>
 
 <form onsubmit={submit} class="space-y-4" data-testid="login-form">
-  <h2 class="text-lg font-bold">Masuk</h2>
+  <h1 class="text-lg font-bold">Masuk</h1>
   <div>
     <label for="login-email-input" class="block text-sm font-medium mb-1">Email</label>
     <input id="login-email-input" type="email" required value={$emailValue} oninput={email.onChange}
