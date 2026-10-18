@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte"; // 1. Tambahkan import ini
   import ModalShell from "../components/ModalShell.svelte";
   import { useInput } from "../../../hooks/useInput";
   import { addContent, changeContent } from "../states/coursesStore";
@@ -6,8 +7,10 @@
 
   let { courseId, item, onClose } = $props();
 
-  const title = useInput(item ? item.title : "");
-  const youtube = useInput(item ? item.youtube : "");
+  // 2. Bungkus dengan untrack()
+  const title = untrack(() => useInput(item ? item.title : ""));
+  const youtube = untrack(() => useInput(item ? item.youtube : ""));
+  
   const titleValue = title.value;
   const youtubeValue = youtube.value;
 
