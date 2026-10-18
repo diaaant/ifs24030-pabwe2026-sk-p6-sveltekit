@@ -53,26 +53,19 @@
 </script>
 
 {#if !sessionChecked}
-  <!-- Menggunakan <main> dan <h1> agar lolos audit -->
-  <main class="min-h-screen flex items-center justify-center">
+  <div class="min-h-screen flex items-center justify-center">
     <h1 class="text-slate-500 text-xl font-bold">Memuat...</h1>
-  </main>
+  </div>
 {:else if isLoggedIn && isAuthRoute}
-  <main class="min-h-screen flex items-center justify-center">
+  <div class="min-h-screen flex items-center justify-center">
     <h1 class="text-slate-500 text-xl font-bold">Mengalihkan...</h1>
-  </main>
+  </div>
 {:else if isLoggedIn && !isAuthRoute}
-  <!-- Membungkus konten halaman dengan <main> -->
-  <main>
-    {@render children?.()}
-  </main>
+  {@render children?.()}
 {:else if !$authToken && isAuthRoute}
-  <!-- Membungkus konten halaman dengan <main> -->
-  <main>
-    {@render children?.()}
-  </main>
+  {@render children?.()}
 {:else}
-  <main class="min-h-screen flex items-center justify-center">
+  <div class="min-h-screen flex items-center justify-center">
     <h1 class="text-slate-500 text-xl font-bold">Mengalihkan...</h1>
-  </main>
+  </div>
 {/if}
