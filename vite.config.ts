@@ -15,6 +15,8 @@ export default defineConfig(({ mode }) => {
         adapter: adapter({
           runtime: "nodejs22.x",
         }),
+        // TAMBAHKAN BARIS INI UNTUK MEMPERBAIKI AUDIT PERFORMA (RENDER-BLOCKING)
+        inlineStyleThreshold: 102400, // 100KB
       }),
       tailwindcss(),
       svelteTesting(),
@@ -50,7 +52,7 @@ export default defineConfig(({ mode }) => {
           "node_modules/**",
           ".svelte-kit/**",
           ".docs/**",
-          "src/hooks.server.ts", // <--- TAMBAHKAN BARIS INI
+          "src/hooks.server.ts",
         ],
         thresholds: {
           lines: 100,
@@ -59,6 +61,6 @@ export default defineConfig(({ mode }) => {
           statements: 100,
         },
       },
-    },
+    }, 
   };
 });
