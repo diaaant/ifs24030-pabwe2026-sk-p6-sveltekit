@@ -93,14 +93,33 @@ describe("AuthSessionRedirect", () => {
     expect(goto).not.toHaveBeenCalled();
   });
 
-  // --- TES FINAL: MENUTUP BRANCH FALLBACK `|| "/"` DI BARIS 33 ---
   it("menggunakan fallback pathname '/' jika page.url.pathname kosong", async () => {
     authToken.set(null);
-    // PENTING: Gunakan string kosong ("") agar memicu fallback, bukan undefined
     setPage(""); 
-    
     render(AuthSessionRedirect);
-    // Karena fallback-nya "/", isAuthRoute menjadi false, dan tanpa token akan diarahkan ke login
+    await waitFor(() => expect(goto).toHaveBeenCalledWith("/auth/login", { replaceState: true }));
+  });
+
+  // --- TES BARU: MEMICU BLOK CATCH (Mengatasi Lines & Statements) ---
+  it("menangani error dengan baik jika loadProfile melempar error (catch block)", async () => {
+    authToken.set("tok");
+    setPage("/courses"); // Berada di halaman non-auth
+
+    // Paksa loadProfile melempar error jaringan
+    vi.spyOn(usersStore, "loadProfile").mockRejectedValue(new Error("Network Error"));
+    
+    // Matikan sementara console.error agar tidak mengotori log test
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(AuthSessionRedirect);
+
+    // Pastikan console.error terpanggil
+    await waitFor(() => expect(consoleSpy).toHaveBeenCalledWith("Gagal memuat profil:", expect.any(Error)));
+    
+    // Karena kita menambahkan logout() di catch, token harusnya jadi null
+    expect(get(authToken)).toBeNull();
+
+    // Dan karena token null, $effect akan melempar ke halaman login
     await waitFor(() => expect(goto).toHaveBeenCalledWith("/auth/login", { replaceState: true }));
   });
 });

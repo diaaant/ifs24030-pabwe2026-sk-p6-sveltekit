@@ -11,20 +11,25 @@
   let sessionChecked = $state(false);
 
   onMount(async () => {
-    if ($authToken) {
-      if (!$profile) {
-        const res = await loadProfile();
-        if (isSuccess(res)) {
-          isAuthLogin.set(true);
+    try {
+      if ($authToken) {
+        if (!$profile) {
+          const res = await loadProfile();
+          if (isSuccess(res)) {
+            isAuthLogin.set(true);
+          } else {
+            logout();
+          }
         } else {
-          logout();
+          isAuthLogin.set(true);
         }
-      } else {
-        // FIX: Jika profil sudah ada, pastikan status login diset true
-        isAuthLogin.set(true);
       }
+    } catch (error) {
+      console.error("Gagal memuat profil:", error);
+      logout(); // <-- TAMBAHKAN INI: Hapus token jika terjadi error jaringan
+    } finally {
+      sessionChecked = true;
     }
-    sessionChecked = true;
   });
 
   $effect(() => {
@@ -41,13 +46,23 @@
       goto("/auth/login", { replaceState: true });
     }
   });
+
+  const pathname = $derived(page?.url?.pathname || "/");
+  const isAuthRoute = $derived(pathname.startsWith("/auth"));
+  const isLoggedIn = $derived(!!($authToken && $isAuthLogin && $profile));
 </script>
 
 {#if !sessionChecked}
   <div class="min-h-screen flex items-center justify-center">
     <p class="text-slate-500">Memuat...</p>
   </div>
-{:else if $authToken && $isAuthLogin && $profile}
+{:else if isLoggedIn && isAuthRoute}
+  <div class="min-h-screen flex items-center justify-center">
+    <p class="text-slate-500">Mengalihkan...</p>
+  </div>
+{:else if isLoggedIn && !isAuthRoute}
+  {@render children?.()}
+{:else if !$authToken && isAuthRoute}
   {@render children?.()}
 {:else}
   <div class="min-h-screen flex items-center justify-center">
