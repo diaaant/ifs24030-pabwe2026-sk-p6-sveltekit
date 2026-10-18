@@ -52,20 +52,23 @@
   const isLoggedIn = $derived(!!($authToken && $isAuthLogin && $profile));
 </script>
 
+<!-- PERUBAHAN: Menggunakan <main> pada status loading agar lolos Axe Core -->
 {#if !sessionChecked}
-  <div class="min-h-screen flex items-center justify-center">
+  <main class="min-h-screen flex items-center justify-center">
     <h1 class="text-slate-500 text-xl font-bold">Memuat...</h1>
-  </div>
+  </main>
 {:else if isLoggedIn && isAuthRoute}
-  <div class="min-h-screen flex items-center justify-center">
+  <main class="min-h-screen flex items-center justify-center">
     <h1 class="text-slate-500 text-xl font-bold">Mengalihkan...</h1>
-  </div>
+  </main>
 {:else if isLoggedIn && !isAuthRoute}
+  <!-- Konten dirender langsung (tanpa <main>) agar tidak terjadi nested landmark -->
   {@render children?.()}
 {:else if !$authToken && isAuthRoute}
+  <!-- Konten dirender langsung (tanpa <main>) agar tidak terjadi nested landmark -->
   {@render children?.()}
 {:else}
-  <div class="min-h-screen flex items-center justify-center">
+  <main class="min-h-screen flex items-center justify-center">
     <h1 class="text-slate-500 text-xl font-bold">Mengalihkan...</h1>
-  </div>
+  </main>
 {/if}
