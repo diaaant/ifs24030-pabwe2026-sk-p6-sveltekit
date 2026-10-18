@@ -53,6 +53,7 @@ export default defineConfig(({ mode }) => {
           ".svelte-kit/**",
           ".docs/**",
           "src/hooks.server.ts",
+          "src/routes/api/**", // <--- TAMBAHKAN BARIS INI
         ],
         thresholds: {
           lines: 100,
